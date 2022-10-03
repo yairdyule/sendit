@@ -3,6 +3,6 @@ import { requireUser } from "~/session.server";
 import type { LoaderFunction } from "@remix-run/server-runtime";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  requireUser(request);
-  throw redirect("/received");
+  await requireUser(request);
+  return redirect("/received");
 };
