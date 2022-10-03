@@ -7,8 +7,8 @@ import {
   requireSpotifyToken,
 } from "~/session.server";
 import { prisma } from "~/db.server";
-import { AddQueueCard, QueueCard } from "~/components/Queue";
-import { Queue } from "@prisma/client";
+import { QueueCard } from "~/components/Queue";
+import type { Queue, User } from "@prisma/client";
 
 export async function loader({ request }: LoaderArgs) {
   const userId = await requireUserId(request);
@@ -28,7 +28,7 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export default function QueuesPage() {
-  const { queues } = useLoaderData<{ queues: Queue[] }>();
+  const { queues } = useLoaderData<{ queues: (Queue & { author: User })[] }>();
   return (
     <div className="m-4">
       <h2 className="text-xl font-medium text-emerald-400">Received Queues</h2>

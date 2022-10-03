@@ -2,23 +2,18 @@ import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { HeartIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { PlusIcon } from "@heroicons/react/20/solid";
-import {
-  Form,
-  useLoaderData,
-  useLocation,
-  useNavigate,
-} from "@remix-run/react";
+import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { prisma } from "~/db.server";
-import type { Queue, Song } from "@prisma/client";
+import type { Queue, Song, User } from "@prisma/client";
 import { UserIcon } from "@heroicons/react/24/solid";
 import { requireUserId } from "~/session.server";
 import { SearchSong } from "~/components/SearchSong";
 
 type LoaderData = {
   userId: string;
-  queue: Queue;
+  queue: Queue & { songs: Song[]; recipient: User | null };
 };
 export const loader: LoaderFunction = async ({ request, params }) => {
   const userId = await requireUserId(request);

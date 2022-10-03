@@ -4,10 +4,7 @@ import { Combobox } from "@headlessui/react";
 import { BiLoaderCircle, BiSearch } from "react-icons/bi";
 import { useFetcher } from "@remix-run/react";
 import type { SpotifyTrack } from "~/utils/spotify";
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+import { classNames } from "~/utils";
 
 export const SearchSong = ({ queue_id }: { queue_id: string }) => {
   const [selectedPerson, setSelectedPerson] = useState();

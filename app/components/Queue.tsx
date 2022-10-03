@@ -3,7 +3,7 @@ import { Link } from "@remix-run/react";
 
 import type { Queue } from "@prisma/client";
 
-export function QueueCard({ queue }: { queue: Queue }) {
+export function QueueCard({ queue }: { queue: Queue | any }) {
   return (
     <li
       key={queue.title}

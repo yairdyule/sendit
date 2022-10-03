@@ -1,24 +1,19 @@
 import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { HeartIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { PencilIcon, PlusIcon } from "@heroicons/react/20/solid";
-import {
-  Link,
-  useLoaderData,
-  useLocation,
-  useMatches,
-  useNavigate,
-} from "@remix-run/react";
-import { json, LoaderFunction } from "@remix-run/server-runtime";
+import { PlusIcon } from "@heroicons/react/20/solid";
+import { useLoaderData, useNavigate } from "@remix-run/react";
+import type { LoaderFunction } from "@remix-run/server-runtime";
+import { json } from "@remix-run/server-runtime";
 import { prisma } from "~/db.server";
-import { Queue, Song } from "@prisma/client";
+import type { Queue, Song, User } from "@prisma/client";
 import { UserIcon } from "@heroicons/react/24/solid";
 import { requireUserId } from "~/session.server";
 import { SearchSong } from "~/components/SearchSong";
 
 type LoaderData = {
   userId: string;
-  queue: Queue;
+  queue: Queue & { songs: Song[]; recipient: User | null };
 };
 export const loader: LoaderFunction = async ({ request, params }) => {
   const userId = await requireUserId(request);
@@ -35,14 +30,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export default function SpecificQueue() {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [open, setOpen] = useState(true);
   const [isSearching, setIsSearching] = useState(false);
-  const location = useLocation();
   const navigate = useNavigate();
   const onDismiss = () => navigate("../");
 
   const { userId, queue } = useLoaderData<LoaderData>();
-  // const queue = location.state as Queue
   const isOwnQueue = queue.authorId === userId;
 
   const openSearchInput = () => {
@@ -51,7 +43,7 @@ export default function SpecificQueue() {
   };
 
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <Transition.Root show={true} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={onDismiss}>
         <Transition.Child
           as={Fragment}
