@@ -126,6 +126,30 @@ export default function SpecificQueue() {
                           </li>
                         </ul>
                       </div>
+                      <div className="flex">
+                        <Form action="/api/export-queue" method="post">
+                          <input
+                            hidden
+                            name="queueId"
+                            value={queue.id}
+                            readOnly
+                          />
+                          <button
+                            type="submit"
+                            className={classNames(
+                              "flex-1 rounded-md border border-transparent py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2",
+                              queue.songs.length === 0
+                                ? "bg-gray-600"
+                                : "bg-emerald-600"
+                            )}
+                            disabled={queue.songs.length === 0}
+                          >
+                            {queue.songs.length === 0
+                              ? "Can't export yet - no songs"
+                              : "Export"}
+                          </button>
+                        </Form>
+                      </div>
                       <div>
                         {queue.songs.length > 0 && (
                           <>
@@ -151,30 +175,6 @@ export default function SpecificQueue() {
                             </ul>
                           </>
                         )}
-                      </div>
-                      <div className="flex">
-                        <Form action="/api/export-queue" method="post">
-                          <input
-                            hidden
-                            name="queueId"
-                            value={queue.id}
-                            readOnly
-                          />
-                          <button
-                            type="submit"
-                            className={classNames(
-                              "flex-1 rounded-md border border-transparent py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2",
-                              queue.songs.length === 0
-                                ? "bg-gray-600"
-                                : "bg-emerald-600"
-                            )}
-                            disabled={queue.songs.length === 0}
-                          >
-                            {queue.songs.length === 0
-                              ? "Can't export yet - no songs"
-                              : "Export"}
-                          </button>
-                        </Form>
                       </div>
                     </div>
                   </div>
