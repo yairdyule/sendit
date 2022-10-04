@@ -156,7 +156,6 @@ async function getClientCredentialsToken() {
     grant_type: "client_credentials",
   }).toString();
   const { basic } = getCredentials();
-  console.log(body);
   const response = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
     body: body,

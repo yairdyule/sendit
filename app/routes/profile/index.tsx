@@ -14,7 +14,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Profile() {
   const { user } = useLoaderData<LoaderData>();
-  console.log(user);
   return (
     <div className="flex h-full w-full flex-col">
       <h2 className="text-lg font-medium text-emerald-400">{user?.email}</h2>

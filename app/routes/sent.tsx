@@ -1,4 +1,3 @@
-import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import {
@@ -8,14 +7,14 @@ import {
 } from "~/session.server";
 import { prisma } from "~/db.server";
 import { AddQueueCard, QueueCard } from "~/components/Queue";
-import { Queue } from "@prisma/client";
+
+import type { LoaderArgs } from "@remix-run/node";
+import type { Queue } from "@prisma/client";
 
 export async function loader({ request }: LoaderArgs) {
   const userId = await requireUserId(request);
   await requireSpotifyAuthCode(request);
-  const token = await requireSpotifyToken(request);
-
-  console.log(token);
+  await requireSpotifyToken(request);
 
   const queues = await prisma.queue.findMany({
     where: { authorId: userId },
