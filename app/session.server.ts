@@ -5,8 +5,40 @@ import invariant from "tiny-invariant";
 import type { User } from "~/models/user.server";
 import { getUserById } from "~/models/user.server";
 
-invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
-invariant(process.env.SPOTIFY_CLIENT_ID, "SPOTIFY_CLIENT_ID must be set");
+export const USER_SESSION_KEY = "userId";
+export const SPOTIFY_AUTH_CODE_KEY = "authCode";
+export const SPOTIFY_ACCESS_TOKEN_KEY = "accessToken";
+export const SPOTIFY_REFRESH_TOKEN_KEY = "refreshToken";
+export const TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token";
+export const REQUIRED_SCOPES =
+  "user-read-currently-playing user-top-read playlist-modify-public playlist-modify-private user-library-read";
+const env = {
+  SESSION_SECRET: process.env.SESSION_SECRET || "",
+  SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID || "",
+  SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET || "",
+  REDIRECT_URI: process.env.REDIRECT_URI || "",
+};
+
+Object.entries(env).forEach(([k, v]) =>
+  invariant(v !== "", `${k} must be set.`)
+);
+
+const basic = Buffer.from(
+  `${env.SPOTIFY_CLIENT_ID}:${env.SPOTIFY_CLIENT_SECRET}`
+).toString("base64");
+
+export const getCredentials = () => ({ basic });
+
+const redirectParams = new URLSearchParams({
+  response_type: "code",
+  scope: REQUIRED_SCOPES,
+  client_id: env.SPOTIFY_CLIENT_ID,
+  redirect_uri: env.REDIRECT_URI,
+});
+
+const authUrl = new URL(
+  `https://accounts.spotify.com/authorize?${redirectParams.toString()}`
+);
 
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -14,16 +46,10 @@ export const sessionStorage = createCookieSessionStorage({
     httpOnly: true,
     path: "/",
     sameSite: "lax",
-    secrets: [process.env.SESSION_SECRET],
+    secrets: [env.SESSION_SECRET],
     secure: process.env.NODE_ENV === "production",
   },
 });
-
-const TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token";
-export const USER_SESSION_KEY = "userId";
-export const SPOTIFY_CODE_KEY = "authCode";
-export const SPOTIFY_ACCESS_TOKEN = "accessToken";
-export const SPOTIFY_REFRESH_TOKEN = "refreshToken";
 
 export async function getSession(request: Request) {
   const cookie = request.headers.get("Cookie");
@@ -46,8 +72,8 @@ export async function getSpotifyTokenFromSession(
   request: Request
 ): Promise<Tokens | undefined> {
   const session = await getSession(request);
-  const access_token = session.get(SPOTIFY_ACCESS_TOKEN).toString();
-  const refresh_token = session.get(SPOTIFY_REFRESH_TOKEN).toString();
+  const access_token = session.get(SPOTIFY_ACCESS_TOKEN_KEY).toString();
+  const refresh_token = session.get(SPOTIFY_REFRESH_TOKEN_KEY).toString();
   return { access_token, refresh_token };
 }
 
@@ -55,7 +81,7 @@ export async function getSpotifyCodeFromSession(
   request: Request
 ): Promise<String | undefined> {
   const session = await getSession(request);
-  const spotifyCode = session.get(SPOTIFY_CODE_KEY) as string;
+  const spotifyCode = session.get(SPOTIFY_AUTH_CODE_KEY) as string;
   return spotifyCode;
 }
 
@@ -92,10 +118,7 @@ export async function requireUser(request: Request) {
 
 export async function requireSpotifyAuthCode(request: Request) {
   const spotifyCode = await getSpotifyCodeFromSession(request);
-  if (!spotifyCode)
-    throw redirect(
-      `https://accounts.spotify.com/authorize?client_id=${process.env.SPOTIFY_CLIENT_ID}&response_type=code&redirect_uri=http%3A%2F%2Flocalhost:3000%2Fauth&scope=user-read-currently-playing%20user-top-read%20playlist-modify-public%20playlist-modify-private%20user-library-read`
-    );
+  if (!spotifyCode) throw redirect(authUrl.toString());
   return spotifyCode;
 }
 
@@ -104,15 +127,11 @@ export async function requireSpotifyToken(request: Request) {
   const { access_token } = await refreshAccessToken(
     tokens?.refresh_token || ""
   );
-  if (!access_token)
-    throw redirect(
-      `https://accounts.spotify.com/authorize?client_id=${process.env.SPOTIFY_CLIENT_ID}&response_type=code&redirect_uri=http%3A%2F%2Flocalhost:3000%2Fauth&scope=user-read-currently-playing%20user-top-read%20playlist-modify-public%20playlist-modify-private%20user-library-read`
-    );
+  if (!access_token) throw redirect(authUrl.toString());
   return access_token as string;
 }
 
 export async function refreshAccessToken(refresh: string) {
-  const { basic } = getCredentials();
   const body = new URLSearchParams({
     refresh_token: refresh,
     grant_type: "refresh_token",
@@ -130,36 +149,16 @@ export async function refreshAccessToken(refresh: string) {
   return { access_token, refresh_token };
 }
 
-export const getCredentials = () => {
-  const client_id = process.env.SPOTIFY_CLIENT_ID;
-  const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
-  const basic = Buffer.from(`${client_id}:${client_secret}`).toString("base64");
-
-  return { basic, client_id, client_secret };
-};
-
 export async function requestSpotifyAccessToken(
   request: Request,
   code: string
 ) {
-  //exchange authorization code for access token
-  // const code = (await requireSpotifyAuthCode(request)) as string;
-  const { basic, client_secret, client_id } = getCredentials();
-
-  console.log({
-    basic,
-    client_id,
-    client_secret,
-    code,
-  });
-
   try {
     const body = new URLSearchParams({
       code: code,
-      redirect_uri: "http://localhost:3000/auth",
+      redirect_uri: env.REDIRECT_URI,
       grant_type: "authorization_code",
     }).toString();
-    console.log(body);
     const response = await fetch(TOKEN_ENDPOINT, {
       method: "POST",
       body: body,
@@ -170,7 +169,6 @@ export async function requestSpotifyAccessToken(
     });
 
     const data = await response.json();
-    console.log(data);
 
     const { access_token, refresh_token, expires_in } = data;
     return { access_token, refresh_token, expires_in };
