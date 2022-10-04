@@ -7,7 +7,7 @@ import type { LoaderFunction } from "@remix-run/server-runtime";
 export const loader: LoaderFunction = async ({ request, params }) => {
   const url = new URL(request.url);
   const query = url.searchParams.get("query");
-  const code = await requireSpotifyToken(request);
+  await requireSpotifyToken(request);
   if (!query) return json({ songs: [] });
 
   const items = await Spotify.search({ query });
