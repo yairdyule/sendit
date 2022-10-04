@@ -13,7 +13,7 @@ import type { Queue, User } from "@prisma/client";
 export async function loader({ request }: LoaderArgs) {
   const userId = await requireUserId(request);
   await requireSpotifyAuthCode(request);
-  const token = await requireSpotifyToken(request);
+  await requireSpotifyToken(request);
 
   const queues = await prisma.queue.findMany({
     where: { recipientId: userId },
