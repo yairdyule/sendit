@@ -22,9 +22,17 @@ export default function Profile() {
           type="submit"
           className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         >
-          Button text
+          Logout
         </button>
       </Form>
+
+      <p className="text-emerald-400">
+        ok you're probably all like 'why isn't there more here' which is totally
+        fair but like c'mon man i made this in a weekend give me some slack. or
+        rather, ideas & feedback on how i can improve the experience, directed
+        to: jewellcommajared (at) gmail (dot) com. thanks for using SendIt, i
+        hope you have a wonderful day {"<3"}
+      </p>
     </div>
   );
 }
