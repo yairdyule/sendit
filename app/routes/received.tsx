@@ -15,8 +15,6 @@ export async function loader({ request }: LoaderArgs) {
   await requireSpotifyAuthCode(request);
   const token = await requireSpotifyToken(request);
 
-  console.log(token);
-
   const queues = await prisma.queue.findMany({
     where: { recipientId: userId },
     include: {
