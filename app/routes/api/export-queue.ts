@@ -9,34 +9,40 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     const user = await Spotify.getUserData({ auth_token: token });
 
-    const { id } = await requireUser(request);
-
     const fd = await request.formData();
     const queueId = fd.get("queueId")?.toString() || "";
+
     const queue = await prisma.queue.findUnique({
       where: { id: queueId },
       include: { songs: true },
     });
 
+    if (!queue) throw new Error("can't export what doesn't exist");
+
     const playlist = await Spotify.createPlaylist(
       {
         name: queue?.title || "Made with Sendit",
-        description: queue?.description,
+        description:
+          queue?.description +
+          " (assembled (with love) via SendIt.)",
         userId: user.id,
         isPublic: false,
       },
       token
     );
 
-    await Spotify.populatePlaylist(
-      {
-        playlistId: playlist.id,
-        trackUris: queue?.songs.map((s) => s.spotify_uri) || [],
-      },
-      token
-    );
+    if (queue?.songs) {
+      await Spotify.populatePlaylist(
+        {
+          playlistId: playlist.id,
+          trackUris: queue?.songs.map((s) => s.spotify_uri) || [],
+        },
+        token
+      );
+    }
+    return redirect("/feed");
   } catch (error) {
+    console.log(error);
     throw error;
   }
-  return redirect("/received");
 };
