@@ -13,14 +13,14 @@ import { SearchSong } from "~/components/SearchSong";
 
 type LoaderData = {
   userId: string;
-  queue: Queue & { songs: Song[]; recipient: User | null };
+  queue: Queue & { songs: Song[]; author: User | null };
 };
 export const loader: LoaderFunction = async ({ request, params }) => {
   const userId = await requireUserId(request);
   const { id } = params;
   const queue = await prisma.queue.findUnique({
     where: { id },
-    include: { songs: true, recipient: true },
+    include: { songs: true, author: true },
   });
 
   if (!queue) throw "Hey";
@@ -124,7 +124,7 @@ export default function SpecificQueue() {
                             <div className="flex items-center">
                               <UserIcon className="h-6 w-6 text-emerald-400" />
                               <p className="ml-4 text-sm font-medium text-gray-400">
-                                Brendan Roman
+                                {queue.author?.email}
                               </p>
                             </div>
                           </li>
