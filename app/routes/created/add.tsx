@@ -25,7 +25,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     },
   });
 
-  return redirect("/queues");
+  return redirect("/created");
 };
 
 export default function AddPage() {
