@@ -26,9 +26,13 @@ export let meta: MetaFunction = () => ({
 });
 
 export async function loader({ request }: LoaderArgs) {
-  return json({
-    user: await getUser(request),
-  });
+  try {
+    return json({
+      user: await getUser(request),
+    });
+  } catch (err) {
+    throw err;
+  }
 }
 
 export default function App() {
