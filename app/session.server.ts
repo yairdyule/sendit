@@ -34,6 +34,7 @@ const redirectParams = new URLSearchParams({
   scope: REQUIRED_SCOPES,
   client_id: env.SPOTIFY_CLIENT_ID,
   redirect_uri: env.REDIRECT_URI,
+  show_dialog: process.env.NODE_ENV === "development" ? "true" : "false",
 });
 
 const authUrl = new URL(
