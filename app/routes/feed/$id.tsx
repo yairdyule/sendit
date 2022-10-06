@@ -1,30 +1,34 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { HeartIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { prisma } from "~/db.server";
-import type { Queue, Song, User } from "@prisma/client";
+import type { Queue, Song } from "@prisma/client";
 import { UserIcon } from "@heroicons/react/24/solid";
-import { requireUserId } from "~/session.server";
+import { requireCreatedUser, requireSpotifyUser } from "~/session.server";
 import { classNames } from "~/utils";
 
 type LoaderData = {
   userId: string;
-  queue: Queue & { songs: Song[]; author: User };
+  queue: Queue & { songs: Song[] };
 };
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const userId = await requireUserId(request);
+  const user = await requireSpotifyUser(request);
+  await requireCreatedUser(request);
   const { id } = params;
   const queue = await prisma.queue.findUnique({
     where: { id },
-    include: { songs: true, author: true },
+    include: {
+      songs: true,
+      author: true,
+    },
   });
 
   if (!queue) throw "Hey";
 
-  return json<LoaderData>({ userId, queue });
+  return json<LoaderData>({ userId: user.id, queue });
 };
 
 export default function SpecificQueue() {
@@ -112,15 +116,12 @@ export default function SpecificQueue() {
                         <h3 className="font-semibold text-gray-300">
                           Shared by
                         </h3>
-                        <ul
-                          role="list"
-                          className="mt-2 divide-y divide-gray-700 border-t border-gray-600"
-                        >
+                        <ul className="mt-2 divide-y divide-gray-700 border-t border-gray-600">
                           <li className="flex items-center justify-between py-3">
                             <div className="flex items-center">
                               <UserIcon className="h-6 w-6 text-emerald-400" />
                               <p className="ml-4 text-sm font-medium text-gray-400">
-                                {queue.author.email}
+                                {queue.authorName}
                               </p>
                             </div>
                           </li>
@@ -154,10 +155,7 @@ export default function SpecificQueue() {
                         {queue.songs.length > 0 && (
                           <>
                             <h3 className="font-medium text-gray-300">Songs</h3>
-                            <ul
-                              role="list"
-                              className="mt-2 divide-y divide-gray-700 border-t border-b border-gray-700"
-                            >
+                            <ul className="mt-2 divide-y divide-gray-700 border-t border-b border-gray-700">
                               {queue.songs.map((s: Song) => {
                                 return (
                                   <li

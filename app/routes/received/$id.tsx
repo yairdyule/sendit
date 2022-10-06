@@ -8,7 +8,7 @@ import { json } from "@remix-run/server-runtime";
 import { prisma } from "~/db.server";
 import type { Queue, Song, User } from "@prisma/client";
 import { UserIcon } from "@heroicons/react/24/solid";
-import { requireUserId } from "~/session.server";
+import { requireSpotifyUser } from "~/session.server";
 import { SearchSong } from "~/components/SearchSong";
 
 type LoaderData = {
@@ -16,7 +16,7 @@ type LoaderData = {
   queue: Queue & { songs: Song[]; author: User | null };
 };
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const userId = await requireUserId(request);
+  const user = await requireSpotifyUser(request);
   const { id } = params;
   const queue = await prisma.queue.findUnique({
     where: { id },
@@ -25,7 +25,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (!queue) throw "Hey";
 
-  return json<LoaderData>({ userId, queue });
+  return json<LoaderData>({ userId: user.id, queue });
 };
 
 export default function SpecificQueue() {

@@ -2,12 +2,14 @@ import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Form, useNavigate } from "@remix-run/react";
-import { ActionFunction, redirect } from "@remix-run/server-runtime";
+import { redirect } from "@remix-run/server-runtime";
 import { prisma } from "~/db.server";
-import { requireUser } from "~/session.server";
+import { requireSpotifyUser } from "~/session.server";
 
-export const action: ActionFunction = async ({ request, params }) => {
-  const author = await requireUser(request);
+import type { ActionFunction } from "@remix-run/server-runtime";
+
+export const action: ActionFunction = async ({ request }) => {
+  const user = await requireSpotifyUser(request);
   const fd = await request.formData();
   const title = fd.get("title")?.toString() ?? "";
   const description = fd.get("description")?.toString() ?? "";
@@ -16,12 +18,19 @@ export const action: ActionFunction = async ({ request, params }) => {
     data: {
       title,
       description,
+      exported_yet: false,
       author: {
-        connect: {
-          id: author.id,
+        connectOrCreate: {
+          where: {
+            spotify_id: user.id,
+          },
+          create: {
+            username: user.display_name,
+            spotify_id: user.id,
+            spotify_uri: user.uri,
+          },
         },
       },
-      exported_yet: false,
     },
   });
   return redirect("/created");

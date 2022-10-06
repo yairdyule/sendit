@@ -20,7 +20,7 @@ export function createQueue({
     data: {
       title,
       authorId: sentBy,
-      recipientId: sentTo,
+      recipientIds: [sentTo],
       description,
       exported_yet: false,
     },
@@ -31,4 +31,3 @@ type exportParams = {
   queueId: string;
   userId: string;
 };
-

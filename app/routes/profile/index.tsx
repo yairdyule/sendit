@@ -1,22 +1,42 @@
 import { Form, useLoaderData } from "@remix-run/react";
-import { json, LoaderFunction } from "@remix-run/server-runtime";
+import { json } from "@remix-run/server-runtime";
+import { requireCreatedUser, requireSpotifyUser } from "~/session.server";
+
+import type { LoaderArgs } from "@remix-run/server-runtime";
 import { prisma } from "~/db.server";
-import { requireUser } from "~/session.server";
+import { User } from "@prisma/client";
 
 type LoaderData = {
-  user: Awaited<ReturnType<typeof prisma.user.findUnique>>;
+  user: User;
+  sentCount: number;
+  gotCount: number;
 };
-export const loader: LoaderFunction = async ({ request }) => {
-  const { id } = await requireUser(request);
-  const user = await prisma.user.findUnique({ where: { id } });
-  return json<LoaderData>({ user });
-};
+export async function loader({ request }: LoaderArgs) {
+  await requireSpotifyUser(request);
+  const user = await requireCreatedUser(request);
+  const sentCount = await prisma.queue.count({ where: { authorId: user.id } });
+  const gotCount = await prisma.queue.count({
+    where: {
+      recipientIds: {
+        has: user.id,
+      },
+    },
+  });
 
-export default function Profile() {
-  const { user } = useLoaderData<LoaderData>();
+  return json<LoaderData>({ user, sentCount, gotCount });
+}
+
+export default function ProfilePage() {
+  const { user, gotCount, sentCount } = useLoaderData<LoaderData>();
   return (
-    <div className="flex h-full max-w-md flex-col mx-auto gap-4">
-      <h2 className="text-lg font-bold text-emerald-400">{user?.email}</h2>
+    <div className="mx-auto flex h-full max-w-md flex-col gap-4">
+      <h2 className="text-lg font-bold text-emerald-400">{user.username}</h2>
+
+      <h2 className="text-lg font-bold text-emerald-400">
+        {sentCount > 0
+          ? `has sent ${sentCount} queue${sentCount > 1 ? "s" : ""} :D`
+          : "hasn't sent any queues"}
+      </h2>
 
       <p className="text-emerald-400">
         ok you're probably all like 'why isn't there more here' which is totally

@@ -3,7 +3,9 @@ import axios from "axios";
 import invariant from "tiny-invariant";
 
 import type { User } from "~/models/user.server";
-import { getUserById } from "~/models/user.server";
+import { getUserBySpotifyId } from "~/models/user.server";
+import { prisma } from "./db.server";
+import { Spotify } from "./utils/spotify";
 
 export const USER_SESSION_KEY = "userId";
 export const SPOTIFY_AUTH_CODE_KEY = "authCode";
@@ -86,14 +88,32 @@ export async function getSpotifyCodeFromSession(
   return spotifyCode;
 }
 
-export async function getUser(request: Request) {
-  const userId = await getUserId(request);
-  if (userId === undefined) return null;
+export async function requireCreatedUser(request: Request) {
+  const user = await requireSpotifyUser(request);
+  const extantUser = await prisma.user.findUnique({
+    where: {
+      spotify_id: user.id,
+    },
+  });
 
-  const user = await getUserById(userId);
-  if (user) return user;
+  if (extantUser) {
+    return extantUser;
+  }
 
-  throw await logout(request);
+  return await prisma.user.create({
+    data: {
+      spotify_id: user.id,
+      spotify_uri: user.uri,
+      username: user.display_name,
+    },
+  });
+}
+
+export async function requireSpotifyUser(request: Request) {
+  await requireSpotifyAuthCode(request);
+  const token = await requireSpotifyToken(request);
+  const user = await Spotify.getUserData({ auth_token: token });
+  return user;
 }
 
 export async function requireUserId(
@@ -106,15 +126,6 @@ export async function requireUserId(
     throw redirect(`/signin-signup`);
   }
   return userId;
-}
-
-export async function requireUser(request: Request) {
-  const userId = await requireUserId(request);
-
-  const user = await getUserById(userId);
-  if (user) return user;
-
-  throw await logout(request);
 }
 
 export async function requireSpotifyAuthCode(request: Request) {

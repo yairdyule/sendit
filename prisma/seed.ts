@@ -16,23 +16,17 @@ async function seed() {
 
   const user0 = await prisma.user.create({
     data: {
-      email: user0Email,
-      password: {
-        create: {
-          hash: user0Password,
-        },
-      },
+      username: "fartner",
+      spotify_id: "id",
+      spotify_uri: "uri",
     },
   });
 
   const user1 = await prisma.user.create({
     data: {
-      email: user1Email,
-      password: {
-        create: {
-          hash: user1Password,
-        },
-      },
+      username: "rarstenoi",
+      spotify_id: "iaaad",
+      spotify_uri: "uriaaa",
     },
   });
 
@@ -42,7 +36,7 @@ async function seed() {
       description: "that i enjoyed and waneted to send to you",
       exported_yet: false,
       authorId: user0.id,
-      recipientId: user1.id,
+      recipientIds: [user1.id],
     },
   });
 
@@ -52,23 +46,7 @@ async function seed() {
       description: "that i enjoy a lot",
       exported_yet: false,
       authorId: user0.id,
-      recipientId: user1.id,
-    },
-  });
-
-  await prisma.note.create({
-    data: {
-      title: "My first note",
-      body: "Hello, world!",
-      userId: user0.id,
-    },
-  });
-
-  await prisma.note.create({
-    data: {
-      title: "My second note",
-      body: "Hello, world!",
-      userId: user0.id,
+      recipientIds: [user1.id],
     },
   });
 

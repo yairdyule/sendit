@@ -1,9 +1,10 @@
-import { ActionFunction } from "@remix-run/server-runtime";
 import { prisma } from "~/db.server";
-import { requireUser } from "~/session.server";
+import { requireSpotifyUser } from "~/session.server";
+
+import type { ActionFunction } from "@remix-run/server-runtime";
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const user = await requireUser(request);
+  await requireSpotifyUser(request);
 
   const fd = await request.formData();
   const songUri = fd.get("songUri")?.toString();

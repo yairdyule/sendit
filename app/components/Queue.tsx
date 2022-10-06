@@ -8,7 +8,7 @@ export function QueueCard({
   author,
 }: {
   queue: Queue | any;
-  author?: User | any;
+  author?: User;
 }) {
   return (
     <div className="flex w-full max-w-xl items-center justify-between space-x-6 rounded-md bg-card-dark p-6">
@@ -19,7 +19,7 @@ export function QueueCard({
           </h3>
           {author && (
             <h3 className="text-md truncate font-medium text-gray-400">
-              {author.email}
+              {author.username}
             </h3>
           )}
         </div>
