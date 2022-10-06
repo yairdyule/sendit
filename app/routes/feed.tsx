@@ -28,7 +28,7 @@ export default function Homepage() {
         <h2 className="overflow-scroll text-xl font-medium text-emerald-400">
           Feed
         </h2>
-        <div className="flex flex-col gap-4 overflow-scroll pt-4">
+        <div className="flex flex-col gap-4 overflow-auto pt-4">
           {queues &&
             queues.map((q) => (
               <Link to={q.id} key={q.id}>
