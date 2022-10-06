@@ -1,19 +1,21 @@
 import type { LoaderArgs } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import { requireSpotifyAuthCode, requireUserId } from "~/session.server";
-import Layout from "~/components/Layout";
+import { requireSpotifyUser } from "~/session.server";
 
+type LoaderData = {
+  user: Awaited<ReturnType<typeof requireSpotifyUser>>;
+};
 export async function loader({ request }: LoaderArgs) {
-  const userId = await requireUserId(request);
-  const spotifyCode = await requireSpotifyAuthCode(request);
+  const user = await requireSpotifyUser(request);
 
-  return {};
+  return json<LoaderData>({ user });
 }
 
-export default function QueuesPage() {
-  const data = useLoaderData<typeof loader>();
+export default function ProfilePage() {
+  const data = useLoaderData<LoaderData>();
   return (
-    <div className="m-4 pt-4 max-w-4xl mx-auto">
+    <div className="m-4 mx-auto max-w-4xl pt-4">
       <Outlet />
     </div>
   );

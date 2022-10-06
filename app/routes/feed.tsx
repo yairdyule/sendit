@@ -1,25 +1,19 @@
-import { json, redirect } from "@remix-run/server-runtime";
-import {
-  requireSpotifyAuthCode,
-  requireSpotifyToken,
-  requireUser,
-} from "~/session.server";
-import type { LoaderFunction } from "@remix-run/server-runtime";
+import { json } from "@remix-run/server-runtime";
+import { requireSpotifyUser } from "~/session.server";
 import { prisma } from "~/db.server";
-import { Queue, User } from "@prisma/client";
 import { Link, Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import { QueueCard } from "~/components/Queue";
 import { useEffect } from "react";
 
+import type { LoaderFunction } from "@remix-run/server-runtime";
+import type { Queue, User } from "@prisma/client";
+
 type LoaderData = { queues: (Queue & { author: User })[] };
 export const loader: LoaderFunction = async ({ request }) => {
-  await requireUser(request);
-  await requireSpotifyAuthCode(request);
-  await requireSpotifyToken(request);
+  await requireSpotifyUser(request);
 
   const queues = await prisma.queue.findMany({
     take: 20,
-    orderBy: { updatedAt: "asc" },
     include: { author: true },
   });
   return json({ queues });
@@ -38,7 +32,7 @@ export default function Homepage() {
           {queues &&
             queues.map((q) => (
               <Link to={q.id} key={q.id}>
-                <QueueCard queue={q} author={q.author} />
+                <QueueCard queue={q} author={q.author as any} />
               </Link>
             ))}
         </div>
@@ -58,7 +52,7 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
-export const ErrorBoundary = ({}) => {
+export const ErrorBoundary = ({ error }: { error: Error }) => {
   const navigate = useNavigate();
   useEffect(() => {
     setTimeout(() => {
@@ -75,6 +69,7 @@ export const ErrorBoundary = ({}) => {
             </h2>
             <div className="flex flex-col gap-4 overflow-scroll text-gray-300">
               Something went wrong on our end.
+              {error.toString()}
             </div>
           </>
         </Wrapper>

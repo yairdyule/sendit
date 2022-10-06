@@ -8,35 +8,17 @@ generator client {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  spotify_uri String   @unique
+  spotify_id  String   @unique
+  username    String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  password       Password?
-  notes          Note[]
-  sentQueues     Queue[]   @relation("SentQueues")
-  receivedQueues Queue[]   @relation("ReceivedQueues")
+  sentQueues     Queue[] @relation("SentQueues")
+  // receivedQueues Queue[] @relation("ReceivedQueues")
 }
 
-model Password {
-  hash String
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String @unique
-}
-
-model Note {
-  id    String @id @default(cuid())
-  title String
-  body  String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String
-}
 
 model Queue {
   id           String  @id @default(cuid())
@@ -50,10 +32,10 @@ model Queue {
   author   User   @relation(name: "SentQueues", fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   authorId String
 
-  recipient   User?   @relation(name: "ReceivedQueues", fields: [recipientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  recipientId String?
+  // recipient   User?   @relation(name: "ReceivedQueues", fields: [recipientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  recipientIds String[]//use data:{recipientIds:{push:'newrecipientid'}}
 
-  songs Song[] @relation("QueueHasSongs")
+  songs Song[] @relation("QueueHasSongs") 
 }
 
 model Song {

@@ -1,7 +1,9 @@
-import { ActionFunction, redirect } from "@remix-run/server-runtime";
+import { redirect } from "@remix-run/server-runtime";
 import { prisma } from "~/db.server";
-import { requireSpotifyToken, requireUser } from "~/session.server";
+import { requireSpotifyToken } from "~/session.server";
 import { Spotify } from "~/utils/spotify";
+
+import type { ActionFunction } from "@remix-run/server-runtime";
 
 export const action: ActionFunction = async ({ request, params }) => {
   try {
@@ -23,8 +25,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       {
         name: queue?.title || "Made with Sendit",
         description:
-          queue?.description +
-          " (assembled (with love) via SendIt.)",
+          queue?.description + " (assembled (with love) via SendIt.)",
         userId: user.id,
         isPublic: false,
       },

@@ -11,9 +11,7 @@ import {
 } from "@remix-run/react";
 
 import tailwindStylesheetUrl from "./styles/app.css";
-import { getUser, requireUser } from "./session.server";
 import Layout from "./components/Layout";
-import { useOptionalUser } from "./utils";
 
 export let links: LinksFunction = () => {
   return [
@@ -36,7 +34,6 @@ export async function loader({ request }: LoaderArgs) {
   console.log(url);
   try {
     return json({
-      user: await getUser(request),
       authError: url.searchParams.get("error"),
     });
   } catch (err) {
@@ -45,7 +42,6 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export default function App() {
-  let user = useOptionalUser();
   let { authError } = useLoaderData();
 
   return (
@@ -55,7 +51,7 @@ export default function App() {
         <Links />
       </head>
       <body className="h-full bg-dark-1000">
-        {user && !authError ? (
+        {!authError ? (
           <Layout.Main>
             <Outlet />
           </Layout.Main>

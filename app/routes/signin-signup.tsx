@@ -16,18 +16,12 @@ export default function SignupSignin() {
             Start using <span className="text-emerald-400">SendIt</span> today.
           </span>
         </h2>
-        <div className="space-y-4 pt-2 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5 sm:space-y-0">
+        <div className="">
           <Link
-            to="/join"
-            className="text-emerald-500-700 flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-2 text-base font-medium shadow-sm hover:bg-indigo-50 sm:px-8"
-          >
-            Sign up
-          </Link>
-          <Link
-            to="/login"
+            to="/"
             className="flex items-center justify-center rounded-md bg-emerald-500 px-4 py-2 font-medium text-white hover:bg-emerald-600"
           >
-            Log In
+            Proceed with Spotify
           </Link>
         </div>
       </div>
