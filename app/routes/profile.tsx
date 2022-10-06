@@ -13,10 +13,8 @@ export async function loader({ request }: LoaderArgs) {
 export default function QueuesPage() {
   const data = useLoaderData<typeof loader>();
   return (
-    <div className="m-4">
-      <div className="pt-4">
-        <Outlet />
-      </div>
+    <div className="m-4 pt-4 max-w-4xl mx-auto">
+      <Outlet />
     </div>
   );
 }

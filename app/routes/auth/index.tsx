@@ -14,13 +14,13 @@ export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   const spotifyCode = searchParams.get("code");
   const error = searchParams.get("error");
 
+  if (error) throw redirect("/signin-signup?error=true",);
+
   const session = await getSession(request);
   session.set(SPOTIFY_AUTH_CODE_KEY, spotifyCode);
 
-  const { access_token, refresh_token, expires_in } = await requestSpotifyAccessToken(
-    request,
-    spotifyCode ?? ""
-  );
+  const { access_token, refresh_token, expires_in } =
+    await requestSpotifyAccessToken(request, spotifyCode ?? "");
 
   session.set(SPOTIFY_ACCESS_TOKEN_KEY, access_token);
   session.set(SPOTIFY_REFRESH_TOKEN_KEY, refresh_token);

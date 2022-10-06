@@ -80,7 +80,7 @@ export default function LoginPage() {
   }, [actionData]);
 
   return (
-    <div className="flex min-h-full flex-col justify-center bg-gradient-to-r from-zinc-900 to-zinc-800 ">
+    <div className="flex min-h-full flex-col justify-center bg-zinc-800">
       <div className="mx-auto w-full max-w-md px-8">
         <Form method="post" className="space-y-6">
           <div>

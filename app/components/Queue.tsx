@@ -11,7 +11,7 @@ export function QueueCard({
   author?: User | any;
 }) {
   return (
-    <div className="flex w-full max-w-xl items-center justify-between space-x-6 rounded-md bg-zinc-800 p-6">
+    <div className="flex w-full max-w-xl items-center justify-between space-x-6 rounded-md bg-card-dark p-6">
       <div className="flex-1 truncate">
         <div className="flex w-72 items-center space-x-3">
           <h3 className="text-md truncate font-medium text-gray-200">

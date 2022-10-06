@@ -32,9 +32,12 @@ export let meta: MetaFunction = () => ({
 });
 
 export async function loader({ request }: LoaderArgs) {
+  const url = new URL(request.url);
+  console.log(url);
   try {
     return json({
       user: await getUser(request),
+      authError: url.searchParams.get("error"),
     });
   } catch (err) {
     throw err;
@@ -43,14 +46,16 @@ export async function loader({ request }: LoaderArgs) {
 
 export default function App() {
   let user = useOptionalUser();
+  let { authError } = useLoaderData();
+
   return (
     <html lang="en" className="h-full overflow-hidden">
       <head>
         <Meta />
         <Links />
       </head>
-      <body className="h-full bg-zinc-900">
-        {user ? (
+      <body className="h-full bg-dark-1000">
+        {user && !authError ? (
           <Layout.Main>
             <Outlet />
           </Layout.Main>
