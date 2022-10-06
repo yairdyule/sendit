@@ -10,7 +10,7 @@ import type { Queue, User } from "@prisma/client";
 
 type LoaderData = { queues: (Queue & { author: User })[] };
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await requireSpotifyUser(request);
+  await requireSpotifyUser(request);
 
   const queues = await prisma.queue.findMany({
     take: 20,
@@ -32,7 +32,7 @@ export default function Homepage() {
           {queues &&
             queues.map((q) => (
               <Link to={q.id} key={q.id}>
-                <QueueCard queue={q} author={q.author} />
+                <QueueCard queue={q} author={q.author as any} />
               </Link>
             ))}
         </div>
@@ -52,7 +52,7 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
-export const ErrorBoundary = ({ error }) => {
+export const ErrorBoundary = ({ error }: { error: Error }) => {
   const navigate = useNavigate();
   useEffect(() => {
     setTimeout(() => {

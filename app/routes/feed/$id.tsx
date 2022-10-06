@@ -5,14 +5,14 @@ import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { prisma } from "~/db.server";
-import type { Queue, Song } from "@prisma/client";
+import type { Queue, Song, User } from "@prisma/client";
 import { UserIcon } from "@heroicons/react/24/solid";
 import { requireCreatedUser, requireSpotifyUser } from "~/session.server";
 import { classNames } from "~/utils";
 
 type LoaderData = {
   userId: string;
-  queue: Queue & { songs: Song[] };
+  queue: Queue & { songs: Song[]; author: User };
 };
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await requireSpotifyUser(request);
@@ -121,7 +121,7 @@ export default function SpecificQueue() {
                             <div className="flex items-center">
                               <UserIcon className="h-6 w-6 text-emerald-400" />
                               <p className="ml-4 text-sm font-medium text-gray-400">
-                                {queue.authorName}
+                                {queue.author.username}
                               </p>
                             </div>
                           </li>
