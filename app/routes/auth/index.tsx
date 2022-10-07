@@ -29,19 +29,6 @@ export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   session.set(SPOTIFY_REFRESH_TOKEN_KEY, refresh_token);
   session.set("expiresIn", expires_in);
 
-  const userDetails = await Spotify.getUserData({ auth_token: access_token });
-
-  const extantUser = await prisma.user.findUnique({
-    where: { spotify_id: userDetails.id },
-  });
-
-  if (!extantUser) {
-    await createUser({
-      spotify_id: userDetails.id,
-      spotify_uri: userDetails.uri,
-      username: userDetails.display_name,
-    });
-  }
 
   if (spotifyCode) {
     return createSpotifySession({
