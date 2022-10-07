@@ -16,7 +16,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     const queue = await prisma.queue.findUnique({
       where: { id: queueId },
-      include: { songs: true },
+      include: { songs: true, author: true },
     });
 
     if (!queue) throw new Error("can't export what doesn't exist");
@@ -25,7 +25,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       {
         name: queue?.title || "Made with Sendit",
         description:
-          queue?.description + " (assembled (with love) via SendIt.)",
+          queue?.description + " assembled (with love) by "+ queue.author.username + " via SendIt.",
         userId: user.id,
         isPublic: false,
       },
