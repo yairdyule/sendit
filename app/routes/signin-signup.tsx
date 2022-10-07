@@ -2,7 +2,6 @@ import { Link, Outlet } from "@remix-run/react";
 import { classNames, useOptionalUser } from "~/utils";
 
 export default function SignupSignin() {
-  const user = useOptionalUser();
   return (
     <main
       className={classNames(
