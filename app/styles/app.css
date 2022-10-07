@@ -1762,10 +1762,6 @@ video {
 }
 
 @media (min-width: 1024px) {
-  .lg\:grid-cols-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
   .lg\:px-8 {
     padding-left: 2rem;
     padding-right: 2rem;
