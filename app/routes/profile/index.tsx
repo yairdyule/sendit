@@ -29,7 +29,7 @@ export async function loader({ request }: LoaderArgs) {
 export default function ProfilePage() {
   const { user, gotCount, sentCount } = useLoaderData<LoaderData>();
   return (
-    <div className="mx-auto flex h-full max-w-md flex-col gap-4">
+    <div className="flex h-full flex-col gap-4">
       <h2 className="text-lg font-bold text-emerald-400">{user.username}</h2>
 
       <h2 className="text-lg font-bold text-emerald-400">

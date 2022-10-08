@@ -40,7 +40,7 @@ export const Main = ({ children }: { children: React.ReactNode }) => {
       </nav>
       <nav
         aria-label="Sidebar"
-        className="hidden md:block md:flex-shrink-0 md:overflow-y-auto md:bg-neutral-800 md:border-r md:border-r-emerald-600"
+        className="hidden pt-6 sm:block sm:flex-shrink-0 sm:overflow-y-auto sm:border-r sm:border-r-card-lighter sm:bg-card-dark"
       >
         <ul className="relative flex w-20 flex-col items-center justify-center space-y-8 p-3">
           <li>
@@ -54,7 +54,9 @@ export const Main = ({ children }: { children: React.ReactNode }) => {
           </li>
         </ul>
       </nav>
-      <div className="flex-grow overflow-scroll">{children}</div>
+      <div className="container mx-auto flex-grow overflow-scroll px-4 md:mx-0">
+        {children}
+      </div>
     </div>
   );
 };

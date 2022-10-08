@@ -25,24 +25,28 @@ export async function loader({ request }: LoaderArgs) {
 export default function QueuesPage() {
   const { queues } = useLoaderData<{ queues: Queue[] }>();
   return (
-    <div className="m-4 mx-auto flex flex-col overflow-auto lg:px-20 px-4">
-      <h2 className="overflow-auto text-xl font-medium text-gray-300">
-        Created Queues
+    <div className="m-4 flex flex-col overflow-auto">
+      <h2 className="font-base overflow-auto text-xl text-emerald-400">
+        Created
       </h2>
-      <div className="overflow-auto pt-4">
-        <div>
-          {queues && (
-            <ul className="grid max-w-2xl grid-cols-1  gap-4 overflow-scroll sm:grid-cols-2">
-              {queues.map((queue) => (
-                <Link to={`${queue.id}`} key={queue.id} state={queue}>
-                  <QueueCard queue={queue} key={queue.id} />
-                </Link>
-              ))}
+      <div
+        className={classNames(
+          "grid w-full grid-cols-1 gap-4 overflow-auto pt-4 md:grid-cols-2 lg:grid-cols-4"
+        )}
+      >
+        {queues && (
+          <>
+            {queues.map((queue) => (
+              <Link to={`${queue.id}`} key={queue.id} state={queue}>
+                <QueueCard queue={queue} key={queue.id} />
+              </Link>
+            ))}
+            <Link to={"add"}>
               <AddQueueCard />
-            </ul>
-          )}
-          <Outlet />
-        </div>
+            </Link>
+          </>
+        )}
+        <Outlet />
       </div>
     </div>
   );

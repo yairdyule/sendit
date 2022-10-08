@@ -15,7 +15,7 @@ export async function loader({ request }: LoaderArgs) {
 export default function ProfilePage() {
   const data = useLoaderData<LoaderData>();
   return (
-    <div className="m-4 mx-auto max-w-4xl pt-4">
+    <div className="m-4">
       <Outlet />
     </div>
   );

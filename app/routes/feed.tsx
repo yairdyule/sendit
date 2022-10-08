@@ -20,15 +20,17 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json({ queues });
 };
 
-export default function Homepage() {
+export default function Feed() {
   const { queues } = useLoaderData<LoaderData>();
 
   return (
-    <div className="m-4 mx-auto flex flex-col overflow-auto px-4 lg:px-20">
-      <h2 className="overflow-auto text-xl font-medium text-emerald-400">
-        Feed
-      </h2>
-      <div className="flex flex-col gap-4 overflow-auto pt-4">
+    <div className="m-4 flex flex-col overflow-auto">
+      <h2 className="font-base overflow-auto text-xl text-emerald-400">Feed</h2>
+      <div
+        className={classNames(
+          "grid w-full grid-cols-1 gap-4 overflow-auto pt-4 md:grid-cols-2 lg:grid-cols-4"
+        )}
+      >
         {queues &&
           queues.map((q) => (
             <Link to={q.id} key={q.id}>
@@ -41,28 +43,14 @@ export default function Homepage() {
   );
 }
 
-const Layout = ({ children }: { children: React.ReactNode }) => (
-  <div className="m-4 mx-auto flex flex-col overflow-auto px-4 lg:px-20">
-    {children}
-  </div>
-);
-
 export const ErrorBoundary = ({ error }: { error: Error }) => {
-  const navigate = useNavigate();
-  useEffect(() => {
-    setTimeout(() => {
-      navigate("/feed");
-    }, 3500);
-  }, [navigate]);
   return (
-    <>
-      <h2 className="overflow-scroll text-xl font-medium text-red-400">
-        Oops!
-      </h2>
-      <div className="flex flex-col gap-4 overflow-scroll text-gray-300">
-        Something went wrong on our end.
-        {error.toString()}
+    <div className="container mx-auto">
+      <div className="container m-4 mx-auto flex max-w-3xl flex-col overflow-auto px-4">
+        <h2 className="font-base overflow-auto text-xl text-red-400">Oops!</h2>
+        <p className="text-gray-200">Something seems to have gone wrong.</p>
+        <pre className="pt-2 text-sm text-red-300">{error.message}</pre>
       </div>
-    </>
+    </div>
   );
 };
