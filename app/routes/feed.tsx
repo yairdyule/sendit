@@ -23,31 +23,25 @@ export default function Homepage() {
   const { queues } = useLoaderData<LoaderData>();
 
   return (
-    <Layout>
-      <Wrapper>
-        <h2 className="overflow-auto text-xl font-medium text-emerald-400">
-          Feed
-        </h2>
-        <div className="flex flex-col gap-4 overflow-auto pt-4">
-          {queues &&
-            queues.map((q) => (
-              <Link to={q.id} key={q.id}>
-                <QueueCard queue={q} author={q.author as any} />
-              </Link>
-            ))}
-        </div>
-      </Wrapper>
+    <div className="m-4 mx-auto flex flex-col overflow-auto px-4 lg:px-20">
+      <h2 className="overflow-auto text-xl font-medium text-emerald-400">
+        Feed
+      </h2>
+      <div className="flex flex-col gap-4 overflow-auto pt-4">
+        {queues &&
+          queues.map((q) => (
+            <Link to={q.id} key={q.id}>
+              <QueueCard queue={q} author={q.author as any} />
+            </Link>
+          ))}
+      </div>
       <Outlet />
-    </Layout>
+    </div>
   );
 }
 
 const Layout = ({ children }: { children: React.ReactNode }) => (
-  <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">{children}</div>
-);
-
-const Wrapper = ({ children }: { children: React.ReactNode }) => (
-  <div className="mx-auto flex max-w-3xl flex-col items-center justify-center gap-4 pt-4">
+  <div className="m-4 mx-auto flex flex-col overflow-auto px-4 lg:px-20">
     {children}
   </div>
 );
@@ -60,20 +54,14 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
     }, 3500);
   }, [navigate]);
   return (
-    <Layout>
-      <>
-        <Wrapper>
-          <>
-            <h2 className="overflow-scroll text-xl font-medium text-red-400">
-              Oops!
-            </h2>
-            <div className="flex flex-col gap-4 overflow-scroll text-gray-300">
-              Something went wrong on our end.
-              {error.toString()}
-            </div>
-          </>
-        </Wrapper>
-      </>
-    </Layout>
+    <>
+      <h2 className="overflow-scroll text-xl font-medium text-red-400">
+        Oops!
+      </h2>
+      <div className="flex flex-col gap-4 overflow-scroll text-gray-300">
+        Something went wrong on our end.
+        {error.toString()}
+      </div>
+    </>
   );
 };
