@@ -8,7 +8,7 @@ import { prisma } from "~/db.server";
 import type { Queue, Song, User } from "@prisma/client";
 import { UserIcon } from "@heroicons/react/24/solid";
 import { requireCreatedUser, requireSpotifyUser } from "~/session.server";
-import { classNames } from "~/utils";
+import { classNames } from "~/utils/css";
 
 type LoaderData = {
   userId: string;

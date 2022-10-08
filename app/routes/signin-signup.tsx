@@ -1,5 +1,5 @@
-import { Link, Outlet } from "@remix-run/react";
-import { classNames, useOptionalUser } from "~/utils";
+import { Link } from "@remix-run/react";
+import { classNames } from "~/utils/css";
 
 export default function SignupSignin() {
   return (
