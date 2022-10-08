@@ -3,12 +3,10 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import {
   ChevronRightIcon,
   PlusIcon,
-  SquaresPlusIcon,
 } from "@heroicons/react/24/solid";
-import { Link } from "@remix-run/react";
 
 import type { Queue, User } from "@prisma/client";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 dayjs.extend(relativeTime);
 
@@ -20,7 +18,6 @@ export function QueueCard({
   author?: User;
 }) {
   const then = dayjs(new Date(queue.updatedAt)).fromNow();
-  console.log({ then });
   return (
     <BaseCard>
       <div className="flex w-full flex-row items-center justify-between">

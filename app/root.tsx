@@ -31,7 +31,6 @@ export let meta: MetaFunction = () => ({
 
 export async function loader({ request }: LoaderArgs) {
   const url = new URL(request.url);
-  console.log(url);
   try {
     return json({
       authError: url.searchParams.get("error"),

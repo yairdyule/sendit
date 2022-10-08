@@ -31,7 +31,6 @@ export const SearchSong = ({ queue_id }: { queue_id: string }) => {
             displayValue={(s: SpotifyTrack) => s?.name ?? ""}
             onChange={(e) => {
               songs.submit(e.target.form);
-              console.log(e.target.form);
             }}
             ref={inputRef}
             name="query"

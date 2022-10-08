@@ -7,18 +7,10 @@ import { type IconType } from "react-icons";
 import { breakpoints, classNames } from "~/utils/css";
 
 export const Main = ({ children }: { children: React.ReactNode }) => {
-  console.log(
-    classNames(
-      "flex h-full w-full flex-col-reverse transition-colors",
-      breakpoints.mediumAndUp("flex-row")
-    )
-  );
-
   return (
     <div
       className={classNames(
-        "flex h-full w-full flex-col-reverse transition-colors",
-        breakpoints.smallAndUp("flex-row")
+        "flex h-full w-full flex-col-reverse transition-colors sm:flex-row",
       )}
     >
       <nav
