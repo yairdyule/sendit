@@ -47,7 +47,7 @@ export function AddQueueCard() {
 }
 
 const BaseCard = ({ children }: { children: ReactNode }) => (
-  <div className="group h-24 max-w-md rounded border-[1px] border-neutral-800 border-opacity-50 bg-card-dark p-5 transition hover:border-emerald-500 hover:bg-card-lighter sm:h-32">
+  <div className="group h-48 max-w-md rounded border-[1px] border-neutral-800 border-opacity-50 bg-card-dark p-2 py-3 transition hover:border-emerald-500 hover:bg-card-lighter sm:h-48">
     <div className="flex h-full w-full flex-col">{children}</div>
   </div>
 );

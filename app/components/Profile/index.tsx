@@ -7,6 +7,7 @@ import { classNames } from "~/utils/css";
 import { Fragment } from "react";
 
 import type { ProfileData } from "~/routes/profile/index";
+import Layout from "../Layout";
 
 dayjs.extend(LocalizedFormat);
 
@@ -44,7 +45,7 @@ export const ProfileMenu = () => {
           >
             <Cog6ToothIcon
               className={classNames(
-                open ? "text-neutral-300" : "text-gray-400",
+                open ? "text-neutral-400" : "text-neutral-500",
                 "ml-2 h-5 w-5 group-hover:text-gray-500"
               )}
               aria-hidden="true"
@@ -87,15 +88,15 @@ export const Details = () => {
   const { sentQueues } = useLoaderData<ProfileData>();
 
   return (
-    <div className="p-4">
+    <div className="overflow-scroll p-2">
       <h2 className="text-neutral-300 lg:text-lg">Sent Queues</h2>
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-flow-row grid-cols-2 gap-2 overflow-scroll sm:grid-cols-2 lg:grid-cols-4">
         {sentQueues.map((q) => (
           <div
-            className="h-48 w-40 rounded-md bg-card-dark px-3 py-4 cursor-not-allowed"
+            className="h-48 cursor-not-allowed rounded-md bg-card-dark px-3 py-4"
             key={q.id}
           >
-            <div className="flex h-full w-full flex-col justify-end">
+            <div className="flex h-full w-full flex-col justify-end overflow-scroll">
               <h4 className="text-sm text-neutral-300">{q.title}</h4>
               <h4 className="text-xs text-neutral-400">
                 {dayjs(q.createdAt).format("ll")}

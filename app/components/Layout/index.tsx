@@ -17,7 +17,7 @@ export const Main = ({ children }: { children: React.ReactNode }) => {
     >
       <SmallNav />
       <SidebarNav />
-      <div className="h-full w-full">{children}</div>
+      <div className="h-full w-full overflow-scroll">{children}</div>
     </div>
   );
 };
@@ -25,7 +25,7 @@ export const Main = ({ children }: { children: React.ReactNode }) => {
 const SmallNav = () => (
   <nav
     className={
-      "h-16 w-full border-t-[3px] border-emerald-500 sm:hidden sm:border-b-2 sm:border-t-transparent"
+      "h-16 w-full border-t-[3px] border-emerald-500 bg-card-dark sm:hidden sm:border-b-2 sm:border-t-transparent"
     }
   >
     <ul className="flex h-full flex-row items-center justify-center gap-8 md:gap-10">
@@ -45,7 +45,7 @@ const SmallNav = () => (
 const SidebarNav = () => (
   <nav
     aria-label="Sidebar"
-    className="hidden pt-6 sm:block flex-shrink-0 overflow-y-auto border-r border-r-neutral-700 bg-card-dark"
+    className="hidden flex-shrink-0 overflow-y-auto border-r border-r-neutral-700 bg-card-dark pt-6 sm:block"
   >
     <ul className="relative flex w-20 flex-col items-center justify-center space-y-8 p-3">
       <li>
@@ -63,7 +63,7 @@ const SidebarNav = () => (
 
 const Container = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="container mx-auto flex-grow overflow-scroll px-4 md:mx-0">
+    <div className="container mx-auto flex-grow overflow-auto px-4 md:mx-0">
       {children}
     </div>
   );

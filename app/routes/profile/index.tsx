@@ -5,6 +5,7 @@ import { requireCreatedUser, requireSpotifyUser } from "~/session.server";
 
 import type { LoaderArgs } from "@remix-run/server-runtime";
 import type { Queue, User } from "@prisma/client";
+import Layout from "~/components/Layout";
 
 export type ProfileData = {
   user: User;
@@ -18,6 +19,7 @@ export async function loader({ request }: LoaderArgs) {
   const user = await requireCreatedUser(request);
   const sentQueues = await prisma.queue.findMany({
     where: { authorId: user.id },
+    orderBy: { createdAt: "desc" },
   });
   const gotCount = await prisma.queue.count({
     where: {
@@ -29,9 +31,7 @@ export async function loader({ request }: LoaderArgs) {
 
   return json<ProfileData>({
     user,
-    sentQueues: sentQueues.sort(
-      (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime()
-    ),
+    sentQueues,
     sentQueueCount: sentQueues.length,
     gotCount,
   });
@@ -39,7 +39,7 @@ export async function loader({ request }: LoaderArgs) {
 
 export default function ProfilePage() {
   return (
-    <div className="flex h-full w-full flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <UserHeader />
       <Details />
     </div>

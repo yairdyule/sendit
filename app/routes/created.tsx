@@ -17,6 +17,7 @@ export async function loader({ request }: LoaderArgs) {
         spotify_id: user.id,
       },
     },
+    orderBy: { createdAt: "desc" },
   });
 
   return json({ queues });
@@ -25,13 +26,13 @@ export async function loader({ request }: LoaderArgs) {
 export default function QueuesPage() {
   const { queues } = useLoaderData<{ queues: Queue[] }>();
   return (
-    <div className="m-4 flex flex-col overflow-auto">
+    <div className="m-2 flex flex-col overflow-auto sm:m-4">
       <h2 className="font-base overflow-auto text-xl text-emerald-400">
         Created
       </h2>
       <div
         className={classNames(
-          "grid w-full grid-cols-1 gap-4 overflow-auto pt-4 md:grid-cols-2 lg:grid-cols-4"
+          "grid w-full grid-cols-2 gap-2 overflow-auto  pt-4 sm:gap-4 md:grid-cols-2 lg:grid-cols-4"
         )}
       >
         {queues && (
