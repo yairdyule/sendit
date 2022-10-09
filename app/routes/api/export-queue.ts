@@ -1,7 +1,7 @@
 import { redirect } from "@remix-run/server-runtime";
 import { prisma } from "~/db.server";
 import { requireSpotifyToken } from "~/session.server";
-import { Spotify } from "~/utils/spotify";
+import { Spotify } from "~/utils/spotify.server";
 
 import type { ActionFunction } from "@remix-run/server-runtime";
 

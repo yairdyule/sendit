@@ -5,7 +5,7 @@ import invariant from "tiny-invariant";
 import type { User } from "~/models/user.server";
 import { getUserBySpotifyId } from "~/models/user.server";
 import { prisma } from "./db.server";
-import { Spotify } from "./utils/spotify";
+import { Spotify } from "./utils/spotify.server";
 
 export const USER_SESSION_KEY = "userId";
 export const SPOTIFY_AUTH_CODE_KEY = "authCode";

@@ -1,5 +1,5 @@
 import { prisma } from "~/db.server";
-import { Spotify } from "~/utils/spotify";
+import { Spotify } from "~/utils/spotify.server";
 
 import type { User, Queue } from "@prisma/client";
 export type { Queue } from "@prisma/client";
