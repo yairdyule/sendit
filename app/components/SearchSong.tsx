@@ -3,7 +3,7 @@ import { CheckIcon } from "@heroicons/react/20/solid";
 import { Combobox } from "@headlessui/react";
 import { BiLoaderCircle, BiSearch } from "react-icons/bi";
 import { useFetcher } from "@remix-run/react";
-import type { SpotifyTrack } from "~/utils/spotify";
+import type { SpotifyTrack } from "~/utils/spotify.server";
 import { classNames } from "~/utils/css";
 
 export const SearchSong = ({ queue_id }: { queue_id: string }) => {
@@ -31,7 +31,6 @@ export const SearchSong = ({ queue_id }: { queue_id: string }) => {
             displayValue={(s: SpotifyTrack) => s?.name ?? ""}
             onChange={(e) => {
               songs.submit(e.target.form);
-              console.log(e.target.form);
             }}
             ref={inputRef}
             name="query"

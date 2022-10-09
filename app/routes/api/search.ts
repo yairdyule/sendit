@@ -1,6 +1,6 @@
 import { json } from "@remix-run/server-runtime";
 import { requireSpotifyToken } from "~/session.server";
-import { Spotify } from "~/utils/spotify";
+import { Spotify } from "~/utils/spotify.server";
 
 import type { LoaderFunction } from "@remix-run/server-runtime";
 

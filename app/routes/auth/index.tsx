@@ -10,7 +10,7 @@ import {
   SPOTIFY_AUTH_CODE_KEY,
   SPOTIFY_REFRESH_TOKEN_KEY,
 } from "~/session.server";
-import { Spotify } from "~/utils/spotify";
+import { Spotify } from "~/utils/spotify.server";
 
 export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   const searchParams = new URL(request.url).searchParams;

@@ -16,6 +16,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const queues = await prisma.queue.findMany({
     take: 20,
     include: { author: true },
+    orderBy: { createdAt: "desc" },
   });
   return json({ queues });
 };
@@ -24,11 +25,11 @@ export default function Feed() {
   const { queues } = useLoaderData<LoaderData>();
 
   return (
-    <div className="m-4 flex flex-col overflow-auto">
+    <div className="m-2 flex flex-col overflow-auto sm:m-4">
       <h2 className="font-base overflow-auto text-xl text-emerald-400">Feed</h2>
       <div
         className={classNames(
-          "grid w-full grid-cols-1 gap-4 overflow-auto pt-4 md:grid-cols-2 lg:grid-cols-4"
+          "grid w-full grid-cols-2 gap-2 overflow-auto  pt-4 sm:gap-4 md:grid-cols-2 lg:grid-cols-4"
         )}
       >
         {queues &&
